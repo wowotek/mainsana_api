@@ -93,31 +93,33 @@ def login():
 # TOUR #
 @app.route("/add_tour", methods=["POST"])
 def add_tour():
+    name=request.form.get("tour_name")
+    description=request.form.get("tour_desc")
     for i in User.query.all():
         if i.username == request.form.get("username"):
             try:
-                tour = Tour(
-                    user=i,
-                    name=request.form.get("tour_name"),
-                    description=request.form.get("tour_desc")
+                t = Tour(
+                    user_id=i.id,
+                    name=name,
+                    description=description
                 )
-                db.session.add(
-                    tour
-                )
+                db.session.add(t)
                 db.session.commit()
+
                 return json_response(
                     data={
-                        "msg": f"successfully added tour for user: {i.username}",
+                        "msg": f"successfully added tour for user: {t.user.username}",
                         "tour": {
-                            "id": tour.id,
-                            "user_id": user.id,
-                            "name": tour.name,
-                            "desc": tour.description
+                            "id": t.id,
+                            "user_id": t.user.id,
+                            "name": t.name,
+                            "desc": t.description
                         },
                         "tour_added": True
                     },
                     status=201
                 )
+
             except Exception as e:
                 return json_response(
                     data={

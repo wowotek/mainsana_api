@@ -9,7 +9,7 @@ from .engine import db
 class Budget(db.Model):
     __tablename__ = 'budget'
 
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     trip_id = db.Column(db.ForeignKey('trip.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False, index=True)
     name = db.Column(db.String(64))
     description = db.Column(db.Text)
@@ -24,7 +24,7 @@ class Budget(db.Model):
 class BudgetType(db.Model):
     __tablename__ = 'budget_type'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(45), nullable=False)
 
 
@@ -32,7 +32,7 @@ class BudgetType(db.Model):
 class Tour(db.Model):
     __tablename__ = 'tour'
 
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     user_id = db.Column(db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False, index=True)
     name = db.Column(db.String(45), nullable=False)
     description = db.Column(db.Text)
@@ -44,7 +44,7 @@ class Tour(db.Model):
 class Trip(db.Model):
     __tablename__ = 'trip'
 
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     tour_id = db.Column(db.ForeignKey('tour.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False, index=True)
     name = db.Column(db.String(128), nullable=False)
     description = db.Column(db.Text)
@@ -56,7 +56,7 @@ class Trip(db.Model):
 class User(db.Model):
     __tablename__ = 'user'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(64), nullable=False, unique=True)
     password = db.Column(db.String(45), nullable=False)
     email = db.Column(db.String(128), nullable=False, unique=True)
