@@ -8,28 +8,19 @@ def register():
     for i in User.query.all():
         if i.username == request.form.get("username"):
             return json_response(
-                data={
-                    "msg": "username exist !",
-                    "registered": False
-                },
+                msg="username exist !",
                 status=400
             )
 
         if i.email == request.form.get("email"):
             return json_response(
-                data={
-                    "msg": "email exist !",
-                    "registered": False
-                },
+                msg="email exist !",
                 status=400
             )
         
         if i.phone == request.form.get("phone"):
             return json_response(
-                data={
-                    "msg": "phone number exist !",
-                    "registered": False
-                },
+                msg="phone number exist !",
                 status=400
             )
     
@@ -46,18 +37,12 @@ def register():
         db.session.commit()
         db.session.refresh(user)
         return json_response(
-            data={
-                "msg": "registered successfully",
-                "registered": True
-            },
+            msg="registered successfully",
             status=201
         )
     except Exception as e:
         return json_response(
-                data={
-                    "msg": f"unknown error, {e}",
-                    "registered": False
-                },
+                msg=f"unknown error, {e}",
                 status=500
             )
 
@@ -69,24 +54,19 @@ def login():
     for i in User.query.all():
         if i.username == username and i.password == password:
             return json_response(
-                data={
-                    "msg": "Logged In !",
-                    "user": {
-                        "id": i.id,
-                        "username": i.username,
-                        "email": i.email,
-                        "phone": i.phone
-                    },
-                    "logged": True
+                msg="Logged In !",
+                user={
+                    "id": i.id,
+                    "username": i.username,
+                    "email": i.email,
+                    "phone": i.phone
                 },
                 status=200
             )
 
     return json_response(
-        data={
-            "msg": "Username / Password not registered",
-            "logged": False
-        },
+        msg="Username / Password not registered",
+        user={},
         status=400
     )
 
@@ -107,34 +87,27 @@ def add_tour():
                 db.session.commit()
 
                 return json_response(
-                    data={
-                        "msg": f"successfully added tour for user: {t.user.username}",
-                        "tour": {
-                            "id": t.id,
-                            "user_id": t.user.id,
-                            "name": t.name,
-                            "desc": t.description
-                        },
-                        "tour_added": True
+                    msg=f"successfully added tour for user: {t.user.username}",
+                    tour={
+                        "id": t.id,
+                        "user_id": t.user.id,
+                        "name": t.name,
+                        "desc": t.description
                     },
                     status=201
                 )
 
             except Exception as e:
                 return json_response(
-                    data={
-                        "msg": f"failed to add tour, {e}",
-                        "tour_added": False
-                    },
+                    msg=f"failed to add tour, {e}",
+                    tour={},
                     status=500
                 )
     
     return json_response(
-        data={
-            "msg": "failed to add, username doesn't exist",
-            "tour_added": False
-        },
-        status=400
+        msg="failed to add, username doesn't exist",
+        tour={},
+        status=500
     )
 
 @app.route("/edit_tour", methods=["POST"])
@@ -152,32 +125,25 @@ def edit_tour():
                 db.session.commit()
 
                 return json_response(
-                    data={
-                        "msg": f"successfully edited tour id: {i.id}",
-                        "tour": {
-                            "id": i.id,
-                            "user_id": i.id,
-                            "name": i.name,
-                            "desc": i.description
-                        },
-                        "tour_added": True
+                    msg=f"successfully edited tour id: {i.id}",
+                    tour={
+                        "id": i.id,
+                        "user_id": i.id,
+                        "name": i.name,
+                        "desc": i.description
                     },
                     status=201
                 )
             except Exception as e:
                 return json_response(
-                    data = {
-                        "msg": f"failed to edit tour, {e}",
-                        "tour_edited": False
-                    },
+                    msg=f"failed to edit tour, {e}",
+                    tour={},
                     status=500
                 )
 
     return json_response(
-            data = {
-                "msg": f"failed to edit tour, id not found",
-                "tour_edited": False
-            },
+            msg=f"failed to edit tour, id not found",
+            tour={},
             status=400
         )
 
@@ -190,26 +156,20 @@ def delete_tour():
                 db.session.delete(i)
                 db.session.commit()
                 return json_response(
-                    data = {
-                        "msg": f"success deleted tour : {target_id}",
-                        "tour_deleted": True
-                    },
+                    msg=f"success deleted tour : {target_id}",
+                    tour={},
                     status=201
                 )
             except Exception as e:
                 return json_response(
-                    data = {
-                        "msg": f"failed to delete tour, {e}",
-                        "tour_deleted": False
-                    },
+                    msg=f"failed to delete tour, {e}",
+                    tour={},
                     status=500
                 )
 
     return json_response(
-            data = {
-                "msg": f"failed to delete tour, id not found",
-                "tour_deleted": False
-            },
+            msg=f"failed to delete tour, id not found",
+            tour={},
             status=400
         )
 
@@ -229,32 +189,25 @@ def add_trip():
                 )
                 db.session.commit()
                 return json_response(
-                    data = {
-                        "msg": f"success added trip, for user: {i.user.username}, tour: {i.name} | {i.id}",
-                        "trip": {
-                            "id": trip.id,
-                            "tour_id": i.id,
-                            "name": trip.name,
-                            "desc": trip.description
-                        },
-                        "trip_added": True
+                    msg=f"success added trip, for user: {i.user.username}, tour: {i.name} | {i.id}",
+                    trip={
+                        "id": trip.id,
+                        "tour_id": i.id,
+                        "name": trip.name,
+                        "desc": trip.description
                     },
                     status=200
                 )
             except Exception as e:
                 return json_response(
-                    data = {
-                        "msg": f"failed to add trip, {e}",
-                        "trip_added": False
-                    },
+                    msg=f"failed to add trip, {e}",
+                    trip={},
                     status=500
                 )
 
     return json_response(
-            data = {
-                "msg": f"failed to add trip, Tour not found",
-                "trip_added": False
-            },
+            msg=f"failed to add trip, Tour not found",
+            trip={},
             status=400
         )
 
@@ -265,26 +218,33 @@ def edit_trip():
     new_description = request.form.get("trip_desc")
 
     for i in Trip.query.all():
-        if str(i) == str(target_id):
+        print(i.id)
+        if str(i.id) == str(target_id):
             try:
                 i.name = new_name
                 i.description = new_description
 
                 db.session.commit()
+                return json_response(
+                    msg=f"success edited trip, tour: {i.tour.name} | {i.id}",
+                    trip={
+                        "id": i.id,
+                        "tour_id": i.tour.id,
+                        "name": i.name,
+                        "desc": i.description
+                    },
+                    status=200
+                )
             except Exception as e:
                 return json_response(
-                    data = {
-                        "msg": f"failed to edit trip, {e}",
-                        "trip_edited": False
-                    },
+                    msg=f"failed to edit trip, {e}",
+                    trip={},
                     status=500
                 )
 
     return json_response(
-            data = {
-                "msg": f"failed to edit trip, id not found",
-                "trip_edited": False
-            },
+            msg=f"failed to edit trip, id not found",
+            trip={},
             status=400
         )
 
@@ -298,26 +258,20 @@ def delete_trip():
                 db.session.delete(i)
                 db.session.commit()
                 return json_response(
-                    data = {
-                        "msg": f"success deleted trip : {target_id}",
-                        "trip_deleted": True
-                    },
+                    msg=f"success deleted trip : {target_id}",
+                    trip={},
                     status=201
                 )
             except Exception as e:
                 return json_response(
-                    data = {
-                        "msg": f"failed to delete trip, {e}",
-                        "trip_deleted": False
-                    },
+                    msg=f"failed to delete trip, {e}",
+                    trip={},
                     status=500
                 )
 
     return json_response(
-            data = {
-                "msg": f"failed to delete trip, id not found",
-                "trip_deleted": False
-            },
+            msg=f"failed to delete trip, id not found",
+            trip={},
             status=400
         )
 
@@ -337,34 +291,27 @@ def add_budget():
                 db.session.add(budget)
                 db.session.commit()
                 return json_response(
-                    data = {
-                        "msg": f"success added budget for trip: {i.name}",
-                        "budget": {
-                            "id": budget.id,
-                            "trip_id": i.id,
-                            "name": budget.name,
-                            "desc": budget.description,
-                            "budget": float(budget.budget),
-                            "budget_type_id": budget.budget_type.name
-                        },
-                        "budget_added": True
+                    msg=f"success added budget for trip: {i.name}",
+                    budget={
+                        "id": budget.id,
+                        "trip_id": i.id,
+                        "name": budget.name,
+                        "desc": budget.description,
+                        "amount": float(budget.budget),
+                        "budget_type_id": budget.budget_type.name
                     },
                     status=201
                 )
             except Exception as e:
                 return json_response(
-                    data = {
-                        "msg": f"failed to add budget, {e}",
-                        "budget_added": False
-                    },
+                    msg=f"failed to add budget, {e}",
+                    budget={},
                     status=500
                 )
 
     return json_response(
-            data = {
-                "msg": f"failed to add budget, id not found",
-                "budget_added": False
-            },
+            msg=f"failed to add budget, id not found",
+            budget={},
             status=400
         )
 
@@ -385,34 +332,27 @@ def edit_budget():
 
                 db.session.commit()
                 return json_response(
-                    data = {
-                        "msg": f"success edited budget : {i.id}",
-                        "budget": {
-                            "id": i.id,
-                            "trip_id": i.trip.id,
-                            "name": i.name,
-                            "desc": i.description,
-                            "budget": float(i.budget),
-                            "budget_type_id": i.budget_type.name
-                        },
-                        "budget_edited": True
+                    msg=f"success edited budget : {i.id}",
+                    budget={
+                        "id": i.id,
+                        "trip_id": i.trip.id,
+                        "name": i.name,
+                        "desc": i.description,
+                        "amount": float(i.budget),
+                        "budget_type_id": i.budget_type.name
                     },
                     status=201
                 )
             except Exception as e:
                 return json_response(
-                    data = {
-                        "msg": f"failed to edit budget, {e}",
-                        "budget_edited": False
-                    },
+                    msg=f"failed to edit budget, {e}",
+                    budget={},
                     status=500
                 )
 
     return json_response(
-            data = {
-                "msg": f"failed to edit budget, id not found",
-                "budget_edited": False
-            },
+            msg=f"failed to edit budget, id not found",
+            budget={},
             status=400
         )
 
@@ -425,25 +365,19 @@ def delete_budget():
                 db.session.delete(i)
                 db.session.commit()
                 return json_response(
-                    data = {
-                        "msg": f"success deleted budget : {target_id}",
-                        "budget_deleted": True
-                    },
+                    msg=f"success deleted budget : {target_id}",
+                    budget={},
                     status=201
                 )
             except Exception as e:
                 return json_response(
-                    data = {
-                        "msg": f"failed to delete budget, {e}",
-                        "budget_deleted": False
-                    },
+                    msg=f"failed to delete budget, {e}",
+                    budget={},
                     status=500
                 )
 
     return json_response(
-            data = {
-                "msg": f"failed to delete budget, id not found",
-                "budget_deleted": False
-            },
+            msg=f"failed to delete budget, id not found",
+            budget={},
             status=400
         )
