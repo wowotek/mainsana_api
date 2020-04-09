@@ -71,6 +71,43 @@ def login():
     )
 
 # TOUR #
+@app.route("/get_tour_all", methods=["POST"])
+def get_tour_all():
+    return json_response(
+        msg=f"success get all tour",
+        tours=[
+            {
+                "id": t.id,
+                "user_id": t.user_id,
+                "name": t.name,
+                "desc": t.description,
+            } for t in Tour.query.all()
+        ],
+        status=200
+    )
+
+@app.route("/get_tour", methods=["POST"])
+def get_tour():
+    tour_id = request.form.get("tour_id")
+    for t in Tour.query.all():
+        if str(t.id) == str(tour_id):
+            return json_response(
+                msg=f"successfully get tour",
+                tour={
+                    "id": t.id,
+                    "user_id": t.user.id,
+                    "name": t.name,
+                    "desc": t.description
+                },
+                status=200
+            )
+
+    return json_response(
+        msg=f"tour not found",
+        tour={},
+        status=400
+    )
+
 @app.route("/add_tour", methods=["POST"])
 def add_tour():
     name=request.form.get("tour_name")
@@ -174,6 +211,43 @@ def delete_tour():
         )
 
 # TRIP #
+@app.route("/get_trip_all", methods=["POST"])
+def get_trip_all():
+    return json_response(
+        msg=f"success get all trip",
+        trips=[
+            {
+                "id": t.id,
+                "tour_id": t.tour.id,
+                "name": t.name,
+                "desc": t.description
+            } for t in Trip.query.all()
+        ],
+        status=200
+    )
+
+@app.route("/get_trip", methods=["POST"])
+def get_trip():
+    trip_id = request.form.get("trip_id")
+    for t in Trip.query.all():
+        if str(t.id) == str(trip_id):
+            return json_response(
+                msg=f"successfully get trip",
+                trip={
+                    "id": t.id,
+                    "tour_id": t.tour.id,
+                    "name": t.name,
+                    "desc": t.description
+                },
+                status=200
+            )
+
+    return json_response(
+        msg=f"trip not found",
+        trip={},
+        status=400
+    )
+
 @app.route("/add_trip", methods=["POST"])
 def add_trip():
     for i in Tour.query.all():
@@ -276,6 +350,47 @@ def delete_trip():
         )
 
 # BUDGETS #
+@app.route("/get_budget_all", methods=["POST"])
+def get_budget_all():
+    return json_response(
+        msg=f"success get all budget",
+        budgets=[
+            {
+                "id": t.id,
+                "trip_id": t.trip.id,
+                "name": t.name,
+                "desc": t.description,
+                "amount": float(t.budget),
+                "budget_type_id": t.budget_type.name
+            } for t in Budget.query.all()
+        ],
+        status=200
+    )
+
+@app.route("/get_budget", methods=["POST"])
+def get_budget():
+    budget_id = request.form.get("budget_id")
+    for t in Budget.query.all():
+        if str(t.id) == str(budget_id):
+            return json_response(
+                msg=f"successfully get budget",
+                budget={
+                    "id": t.id,
+                    "trip_id": t.trip.id,
+                    "name": t.name,
+                    "desc": t.description,
+                    "amount": float(t.budget),
+                    "budget_type_id": t.budget_type.name
+                },
+                status=200
+            )
+
+    return json_response(
+        msg=f"budget not found",
+        trip={},
+        status=400
+    )
+
 @app.route("/add_budget", methods=["POST"])
 def add_budget():
     for i in Trip.query.all():
@@ -381,3 +496,37 @@ def delete_budget():
             budget={},
             status=400
         )
+
+# Budget Type
+@app.route("/get_budget_type_all", methods=["POST"])
+def get_budget_type_all():
+    return json_response(
+        msg=f"success get all budget type",
+        budget_types=[
+            {
+                "id": t.id,
+                "name": t.name,
+            } for t in BudgetType.query.all()
+        ],
+        status=200
+    )
+
+@app.route("/get_budget_type", methods=["POST"])
+def get_budget_type():
+    budget_type_id = request.form.get("budget_type_id")
+    for t in BudgetType.query.all():
+        if str(t.id) == str(budget_type_id):
+            return json_response(
+                msg=f"successfully get budget type",
+                budget_type={
+                    "id": t.id,
+                    "name": t.name,
+                },
+                status=200
+            )
+
+    return json_response(
+        msg=f"budget_type not found",
+        budget_type={},
+        status=400
+    )
