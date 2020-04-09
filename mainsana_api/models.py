@@ -10,11 +10,11 @@ class Budget(db.Model):
     __tablename__ = 'budget'
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    trip_id = db.Column(db.ForeignKey('trip.id'), primary_key=True, nullable=False, index=True)
+    trip_id = db.Column(db.ForeignKey('trip.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False, index=True)
     name = db.Column(db.String(64))
     description = db.Column(db.Text)
     budget = db.Column(db.Numeric(22, 2), nullable=False)
-    budget_type_id = db.Column(db.ForeignKey('budget_type.id'), nullable=False, index=True)
+    budget_type_id = db.Column(db.ForeignKey('budget_type.id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False, index=True)
 
     budget_type = db.relationship('BudgetType', primaryjoin='Budget.budget_type_id == BudgetType.id', backref='budgets')
     trip = db.relationship('Trip', primaryjoin='Budget.trip_id == Trip.id', backref='budgets')
@@ -33,7 +33,7 @@ class Tour(db.Model):
     __tablename__ = 'tour'
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    user_id = db.Column(db.ForeignKey('user.id'), primary_key=True, nullable=False, index=True)
+    user_id = db.Column(db.ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False, index=True)
     name = db.Column(db.String(45), nullable=False)
     description = db.Column(db.Text)
 
@@ -45,7 +45,7 @@ class Trip(db.Model):
     __tablename__ = 'trip'
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    tour_id = db.Column(db.ForeignKey('tour.id'), primary_key=True, nullable=False, index=True)
+    tour_id = db.Column(db.ForeignKey('tour.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False, index=True)
     name = db.Column(db.String(128), nullable=False)
     description = db.Column(db.Text)
 
